@@ -21,14 +21,14 @@ namespace ProjectCDN_API.Controllers
             _context = context;
         }
 
-        // GET: UserModels
+        // GET: all user details in database
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
         {
             return await _context.UserModel.ToListAsync();
         }
 
-        // GET: UserModels/Details/5
+        // GET: user details by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> GetUsersById(long id)
         {
@@ -38,23 +38,16 @@ namespace ProjectCDN_API.Controllers
             {
                 return NotFound();
             }
-            else
-            {
-                return user;
-            }
+                
+            return user;
         }
 
-        // PUT: api/TodoItems/5
+        // PUT: update user details by ID
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // <snippet_Update>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, UserModel userModel)
+        public async Task<IActionResult> PutUser(long id, UserPutModel userModel)
         {
-            if (id != userModel.Id)
-            {
-                return BadRequest();
-            }
-
             var user = await _context.UserModel.FindAsync(id);
             if (user == null)
             {
@@ -79,7 +72,7 @@ namespace ProjectCDN_API.Controllers
             return NoContent();
         }
 
-        // POST: UserModels/Create
+        // POST: add new user details to database
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -96,9 +89,8 @@ namespace ProjectCDN_API.Controllers
             return CreatedAtAction(nameof(GetUsers), new { id = userModel.Id }, userModel);
         }
 
-        // GET: UserModels/Delete/5
+        // GET: delete user details by ID
         [HttpDelete("{id}")]
-
         public async Task<IActionResult> DeleteUser(long id)
         {
             var user = await _context.UserModel.FindAsync(id);
@@ -116,6 +108,15 @@ namespace ProjectCDN_API.Controllers
         private bool UserModelExists(long id)
         {
             return _context.UserModel.Any(e => e.Id == id);
+        }
+
+        public class UserPutModel
+        {
+            public string? UserName { get; set; }
+            public string? EmailAddress { get; set; }
+            public long PhoneNumber { get; set; }
+            public string? SkillSets { get; set; }
+            public string? Hobbies { get; set; }
         }
     }
 }
